@@ -1,0 +1,134 @@
+#include "Adafruit_CCS811.h"
+
+Adafruit_CCS811 ccs;
+
+#include <Wire.h>
+#include “cactus_io_BME280_I2C.h”
+
+#include <MiCS6814-I2C.h>
+
+MiCS6814 sensor;
+bool sensorConnected;
+
+//Create BME280 objectBME280_I2C bme(0x76);
+// or BME_I2C bme(0x76);
+
+const int buzzer = 9; //buzzerr-a pin 9-ra
+int led = 7;// led-a pin 7-ra
+const int button = 8; //pultsadorea pin 8-ra
+int buttonState;
+
+void setup(){
+ 
+  pinMode(buzzer, OUTPUT); // Set buzzer - pin 9 as an output
+  pinMode(button, INPUT);
+  pinMode(led, OUTPUT);
+
+Serial.begin(9600);
+Serial.println(“Bosch BME280 Pressure - Humidity - Temp Sensor |cactus.io”);
+
+if(!bme.begin()){
+Serial.println(“Could not find a valid BME280 sensor,check wiring!”);
+while(1);
+}
+
+bme.setTempCal(-1);// Temp was reading high so subtract 1 degree
+
+Serial.println(“Pressure\tHumidity\t\tTemp\ttTemp”)
+}
+
+Serial.println("CCS811 test");
+
+  if(!ccs.begin()){
+    Serial.println("Failed to start sensor! Please check your wiring.");
+    while(1);
+  }
+
+  // Wait for the sensor to be ready
+  while(!ccs.available());
+}
+  // Initialize serial connection
+  Serial.begin(115200);
+
+  // Connect to sensor using default I2C address (0x04)
+  // Alternatively the address can be passed to begin(addr)
+  sensorConnected = sensor.begin();
+
+  if (sensorConnected == true) {
+    // Print status message
+    Serial.println("Connected to MiCS-6814 sensor");
+
+    // Turn heater element on
+    sensor.powerOn();
+    
+    // Print header for live values
+    Serial.println("Current concentrations:");
+    Serial.println("CO\tNO2\tNH3\tC3H8\tC4H10\tCH4\tH2\tC2H5OH");
+  } else {
+    // Print error message on failed connection
+    Serial.println("Couldn't connect to MiCS-6814 sensor");
+  }
+}
+
+
+void loop(){
+bme.readSensor();
+
+Serial.print(bme.getPRessure_MB());
+Serial. print(“mb\t”); //pressure in millibars
+Serial.print(bme.getHumidity());
+Serial.print(“%\t\t”);
+Serial.print(bme.getTemperature_C())
+Serial.print(“*C\t);
+
+if(ccs.available()){
+    if(!ccs.readData()){
+      Serial.print("CO2: ");
+      Serial.print(ccs.geteCO2());
+      Serial.print("ppm, TVOC: ");
+      Serial.println(ccs.getTVOC());
+    }
+    else{
+      Serial.println("ERROR!");
+      while(1);
+    }
+
+ if (sensorConnected) {
+    // Print live values
+    Serial.print(sensor.measureCO());
+    Serial.print("\t");
+    Serial.print(sensor.measureNO2());
+    Serial.print("\t");
+    Serial.print(sensor.measureNH3());
+    Serial.print("\t");
+    Serial.print(sensor.measureC3H8());
+    Serial.print("\t");
+    Serial.print(sensor.measureC4H10());
+    Serial.print("\t");
+    Serial.print(sensor.measureCH4());
+    Serial.print("\t");
+    Serial.print(sensor.measureH2());
+    Serial.print("\t");
+    Serial.println(sensor.measureC2H5OH());
+  }
+
+  // Wait a small amount of time
+  delay(1000);
+}
+
+
+delay(2000);
+}
+
+  buttonState = digitalRead(button);
+  if (buttonState = HIGH)
+  digitalWrite(led, HIGH);
+  else
+  digitalWrite(led, LOW);
+ 
+  tone(buzzer, 1000); // 1kHz - ko, seinalea
+  delay(1000);        // 1s
+  noTone(buzzer);     // moztu seinalea
+  delay(1000);        // 1s
+  
+}
