@@ -1,12 +1,11 @@
-/*Siguen saliendo asteriscos en vez de valores en las coordenadas*/
+   /*Siguen saliendo asteriscos en vez de valores en las coordenadas*/
 
 #include <SoftwareSerial.h>
-
 #include <TinyGPS.h>
 
-/* This sample code demonstrates the normal use of a TinyGPS object.
-   It requires the use of SoftwareSerial, and assumes that you have a
-   4800-baud serial GPS device hooked up on pins 4(rx) and 3(tx).
+/*  Codigo de muestra_ Uso normal de objeto [TinyGPS].
+   Requiere SoftwareSerial, y asume la frecuencia del [TinyGPS] 
+   como 4800-baud conectado a pines 4(rx) y 3(tx)
 */
 
 TinyGPS gps;
@@ -37,9 +36,9 @@ void loop()
   float flat, flon;
   unsigned long age, date, time, chars = 0;
   unsigned short sentences = 0, failed = 0;
-  static const double PAMP_LAT = 42.482154352 , PAMP_LON = 1.381047686;
+  static const double PAMP_LAT = 42.482154352 , PAMP_LON = 1.381047686; //Pamplona coordenates 
   
-  print_int(gps.satellites(), TinyGPS::GPS_INVALID_SATELLITES, 5);
+  print_int(gps.satellites(), TinyGPS::GPS_INVALID_SATELLITES, 5); 
   print_int(gps.hdop(), TinyGPS::GPS_INVALID_HDOP, 5);
   gps.f_get_position(&flat, &flon, &age);
   print_float(flat, TinyGPS::GPS_INVALID_F_ANGLE, 10, 6);
